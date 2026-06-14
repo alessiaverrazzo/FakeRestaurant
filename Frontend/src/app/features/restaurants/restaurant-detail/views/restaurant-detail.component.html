@@ -1,0 +1,278 @@
+<div class="w-full min-h-screen bg-white-background px-6 lg:px-10 py-8 flex justify-center">
+  <div class="w-full max-w-[1100px] animate-fadeIn flex flex-col gap-12">
+    <!-- =======================
+        FOTO + MAPPA
+    ======================== -->
+    @if (vm.restaurant()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- FOTO SOLO SE ESISTE -->
+        @if (vm.restaurant()?.imageUrl) {
+          <div class="image-wrapper rounded-2xl overflow-hidden">
+            <img
+              [src]="vm.restaurant()?.imageUrl"
+              class="restaurant-image"
+              alt="Il luogo del (buon?) crimine culinario"
+            />
+          </div>
+        }
+        <!-- MAPPA -->
+        <div 
+          class="mini-map-wrapper rounded-2xl overflow-hidden relative"
+          [class.md:col-span-2]="!vm.restaurant()?.imageUrl"
+        >
+          <div
+            class="absolute top-3 right-3 z-[9]
+              bg-yellow-primary text-brown-dark text-xs font-bold px-3 py-1 rounded-full shadow">
+            Dove tutto questo accade 🤡
+          </div>
+          <app-mini-map
+            [latitude]="vm.restaurant()?.latitude ?? 0"
+            [longitude]="vm.restaurant()?.longitude ?? 0"
+            [name]="vm.restaurant()?.name ?? ''"
+            class="mini-map"
+          ></app-mini-map>
+        </div>
+      </div>
+    } @else {
+      <!-- Nessun dato ancora → loader o placeholder mappa -->
+      <div class="mini-map-wrapper rounded-2xl overflow-hidden relative h-64 flex items-center justify-center text-brown-dark/40">
+        Caricamento…
+      </div>
+    }
+
+    <!-- =======================
+         HERO (titolo + owner)
+    ======================== -->
+    <div class="flex flex-col gap-3">
+      <!-- TITOLO + MODIFICA -->
+      <div class="flex items-start justify-between">
+        @if (!vm.editMode()) {
+          <h1 class="text-4xl font-extrabold text-brown-dark tracking-tight leading-tight">
+            {{ vm.restaurant()?.name }}
+          </h1>
+        } @else {
+          <input
+            type="text"
+            class="w-full max-w-xl rounded-xl border border-brown-dark/40 px-4 py-3 text-brown-dark text-3xl font-bold"
+            [ngModel]="vm.editName()"
+            (ngModelChange)="vm.editName.set($event)"
+          />
+          @if (vm.errorUpdate()) {
+            <p class="text-red-accent text-sm mt-2">
+              {{ vm.errorUpdate() }}
+            </p>
+          }
+        }
+        @if (vm.isOwner() && !vm.editMode()) {
+          <button
+            (click)="vm.startEditing()"
+            class="bg-brown-dark text-yellow-primary px-5 py-2 rounded-full text-sm font-semibold hover:bg-orange-soft transition"
+          >
+            Modifica (ma non fare casini)
+          </button>
+        }
+      </div>
+
+      <!-- OWNER -->
+      <div class="flex items-center gap-3 text-brown-dark/90">
+        @if (vm.restaurant()?.iconId) {
+          <img
+            [src]="'assets/user-icons/icon' + vm.restaurant()?.iconId + '.png'"
+            class="w-10 h-10 rounded-full border border-brown-dark/40"
+          />
+        }
+        <span class="text-lg font-medium">
+          Gestito da @{{ vm.restaurant()?.username }}
+          <span class="text-brown-dark/60 text-sm">(probabilmente una persona vera)</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- =======================
+        DESCRIZIONE + VOTI
+    ======================== -->
+    <div class="bg-cream-light border border-brown-dark/30 rounded-2xl p-6 flex flex-col gap-10">
+      <!-- ======= DESCRIZIONE ======= -->
+      <div>
+        <h2 class="text-xl font-semibold text-brown-dark mb-2">Descrizione</h2>
+        <p class="text-xs text-brown-dark/60 mb-4">Testo fornito dallo staff. Contenuti potenzialmente esagerati.</p>
+
+        @if (vm.editMode()) {
+          <div class="space-y-4">
+            <textarea
+              rows="7"
+              class="w-full rounded-xl border border-brown-dark/30 px-3 py-2 text-brown-dark resize-none"
+              [ngModel]="vm.editDescription()"
+              (ngModelChange)="vm.editDescription.set($event)"
+            ></textarea>
+
+            <!-- BOTTONI SALVA / ANNULLA + ELIMINA -->
+            <div class="flex items-center justify-between">
+              <div class="flex gap-3">
+                <button
+                  class="bg-green-accent text-yellow-primary px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
+                  [disabled]="vm.loadingUpdate()"
+                  (click)="vm.saveChanges()"
+                >
+                  Salva
+                </button>
+                <button
+                  class="bg-red-accent text-yellow-primary px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
+                  (click)="vm.cancelEditing()"
+                  [disabled]="vm.loadingUpdate()"
+                >
+                  Annulla
+                </button>
+              </div>
+              @if (vm.editMode() && vm.isOwner()) {
+                <button
+                  class="bg-red-accent text-yellow-primary px-5 py-2 rounded-full font-semibold hover:bg-red-accent/90 transition"
+                  (click)="vm.openDeleteModal()"
+                >
+                  Elimina ristorante
+                </button>
+              }
+            </div>
+          </div>
+        } @else {
+          <p
+            class="text-brown-dark/80 leading-relaxed whitespace-pre-line break-words"
+            [class.max-h-40]="vm.needsCollapse() && !vm.expanded()"
+            [class.overflow-hidden]="vm.needsCollapse() && !vm.expanded()"
+          >
+            {{ vm.visibleText() }}
+          </p>
+          @if (vm.needsCollapse()) {
+            <button
+              (click)="vm.toggleExpanded()"
+              class="mt-2 text-brown-dark font-semibold hover:text-orange-soft text-sm"
+            >
+              {{ vm.expanded() ? 'Mostra meno' : 'Mostra di più (se proprio vuoi)' }}
+            </button>
+          }
+        }
+      </div>
+
+      <!-- =======================
+             VOTI
+      ======================== -->
+      <div class="border-t border-brown-dark/20 pt-6 flex items-center gap-12">
+        <!-- UPVOTE -->
+        <div class="flex flex-col items-center relative group">
+          <button
+            type="button"
+            class="vote-btn upvote mb-1 relative"
+            [class.active-up]="vm.userVote() === 1"
+            [class.cursor-not-allowed]="!vm.isLoggedIn()"
+            (click)="vm.vote(1)"
+          >
+            <svg viewBox="0 0 24 24" class="w-8 h-8">
+              <path
+                d="M12 3 L19 11 H15 V21 H9 V11 H5 Z"
+                fill="transparent"
+                stroke="currentColor"
+                stroke-width="2.2"
+              ></path>
+            </svg>
+
+            @if (!vm.isLoggedIn()) {
+              <div class="tooltip absolute left-1/2 -translate-x-1/2 -top-9 whitespace-nowrap">
+                Devi essere loggato per votare
+              </div>
+            }
+          </button>
+
+          <span class="text-brown-dark font-bold text-2xl">
+            {{ vm.netUpvotes() }}
+          </span>
+          <span class="text-xs text-brown-dark/60">persone entusiaste (forse)</span>
+        </div>
+
+        <!-- DOWNVOTE -->
+        <div class="flex flex-col items-center relative group">
+          <button
+            type="button"
+            class="vote-btn downvote mb-1 relative"
+            [class.active-down]="vm.userVote() === -1"
+            [class.cursor-not-allowed]="!vm.isLoggedIn()"
+            (click)="vm.vote(-1)"
+          >
+            <svg viewBox="0 0 24 24" class="w-8 h-8">
+              <path
+                d="M12 21 L5 13 H9 V3 H15 V13 H19 Z"
+                fill="transparent"
+                stroke="currentColor"
+                stroke-width="2.2"
+              ></path>
+            </svg>
+            @if (!vm.isLoggedIn()) {
+              <div class="tooltip absolute left-1/2 -translate-x-1/2 -top-9 whitespace-nowrap">
+                Devi essere loggato per votare
+              </div>
+            }
+          </button>
+
+          <span class="text-brown-dark font-bold text-2xl">
+            {{ vm.netDownvotes() }}
+          </span>
+          <span class="text-xs text-brown-dark/60">persone traumatizzate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================
+        RECENSIONI
+    ======================= -->
+    <div class="mb-24">
+      <h2 class="text-2xl font-extrabold text-brown-dark mb-4">Recensioni</h2>
+      @if (vm.restaurant()) {
+        <app-review-tree
+          [restaurantId]="vm.restaurant()?.id ?? 0"
+          [isLoggedIn]="vm.isLoggedIn()"
+          [loggedUserId]="vm.loggedUserId"
+          [highlightRootReviewId]="vm.highlightRootReviewId()"
+          [highlightReviewId]="vm.highlightReviewId()"
+        ></app-review-tree>
+      }
+    </div>
+  </div>
+
+  <!-- =======================
+       MODALE ELIMINAZIONE
+  ======================= -->
+  @if (vm.showDeleteModal()) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div class="bg-white-background border border-brown-dark/30 rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
+        <h2 class="text-xl font-bold text-brown-dark mb-3">
+          Conferma eliminazione
+        </h2>
+        <p class="text-brown-dark mb-4 leading-relaxed">
+          Sei sicuro di voler eliminare <strong>{{ vm.restaurant()?.name }}</strong>?<br>
+          Questa azione è definitiva.
+        </p>
+
+        <div class="flex flex-col gap-3 mt-4">
+          <button
+            class="w-full bg-red-accent text-white-background font-semibold py-2 rounded-xl
+              hover:bg-red-accent/90 active:scale-95 transition"
+            [disabled]="vm.loadingDelete()"
+            (click)="vm.confirmDelete()"
+          >
+            @if (vm.loadingDelete()) {
+              Eliminazione...
+            } @else {
+              Conferma eliminazione
+            }
+          </button>
+          <button
+            class="w-full bg-brown-dark/20 text-brown-dark font-semibold py-2 rounded-xl
+              hover:bg-brown-dark/30 active:scale-95 transition"
+            (click)="vm.closeDeleteModal()"
+          >
+            Annulla
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,85 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Griglia a tre colonne con frecce ai lati */
+.scroller-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* Pulsanti frecce */
+.scroll-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  background: rgba(251, 146, 60, 0.7); /* orange-soft/70 */
+  border: 1px solid rgba(120, 53, 15, 0.4); /* brown-dark/40 */
+  border-radius: 9999px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background: var(--orange-soft);
+}
+
+.scroll-btn:active {
+  transform: scale(0.95);
+}
+
+/* Freccia sinistra */
+.arrow-left {
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid var(--brown-dark);
+  border-left: 3px solid var(--brown-dark);
+  transform: rotate(-45deg);
+}
+
+/* Freccia destra */
+.arrow-right {
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid var(--brown-dark);
+  border-right: 3px solid var(--brown-dark);
+  transform: rotate(45deg);
+}
+
+/* Area di scroll */
+.scroller {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  /* nasconde scrollbar */
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Wrapper uniforme delle card */
+.items-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* per altezza uniforme */
+}
+
+.items-wrapper > * {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+

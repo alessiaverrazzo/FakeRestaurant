@@ -1,0 +1,19 @@
+<div class="scroller-grid mx-auto max-w-[1500px]">
+  <!-- FRECCIA SINISTRA -->
+  <button class="scroll-btn" (click)="scrollLeft()">
+    <span class="arrow-left"></span>
+  </button>
+
+  <!-- SCROLLER -->
+  <div #scroller class="scroller">
+    <!-- Wrapper per assicurare altezza coerente -->
+    <div class="items-wrapper flex gap-4">
+      <ng-content select="*"></ng-content>
+    </div>
+  </div>
+
+  <!-- FRECCIA DESTRA -->
+  <button class="scroll-btn" (click)="scrollRight()">
+    <span class="arrow-right"></span>
+  </button>
+</div>

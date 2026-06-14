@@ -1,0 +1,32 @@
+<app-navbar (login)="openLogin()"></app-navbar>
+
+<div class="app-content pt-4">
+  <router-outlet />
+</div>
+
+<!-- MODALI AUTENTICAZIONE -->
+
+<!-- LOGIN -->
+@if (showLogin) {
+  <app-login
+    (close)="closeLogin()"
+    (openRegister)="openRegister()"
+    (openPasswordResetRequest)="openPasswordResetRequest()"
+  />
+}
+
+<!-- REGISTER -->
+@if (showRegister) {
+  <app-register
+    (close)="closeRegister()"
+    (openLogin)="openLogin()"
+  />
+}
+
+<!-- PASSWORD RESET REQUEST -->
+@if (showPasswordResetRequest) {
+  <app-password-reset-request
+    (close)="closePasswordResetRequest()"
+    (openLogin)="openLogin()"
+  />
+}

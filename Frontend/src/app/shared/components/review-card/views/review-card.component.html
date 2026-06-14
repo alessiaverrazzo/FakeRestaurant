@@ -1,0 +1,98 @@
+<div class="max-w-sm p-6 bg-cream-light border border-brown-dark rounded-2xl shadow-sm transition-all duration-300">
+  <!-- HEADER -->
+  <div class="mb-3 text-xl font-bold tracking-tight text-brown-dark">
+    Da: {{ vmReview()?.restaurantName }}
+  </div>
+
+  <!-- CONTENUTO RECENSIONE -->
+  <div class="mb-5 text-brown-dark text-base leading-relaxed relative">
+    <!-- Testo recensione -->
+    <p
+      class="review-text transition-[max-height] duration-300 ease-in-out overflow-hidden"
+      [class.expanded]="isExpanded"
+    >
+      {{ isExpanded ? vmReview()?.content : (vmReview()?.content | truncate:150) }}
+    </p>
+
+    <!-- Fade in fondo al testo quando troncato -->
+    @if (!isExpanded && (vmReview()?.content?.length ?? 0) > 150) {
+      <div
+        class="absolute bottom-0 left-0 w-full h-3 bg-gradient-to-t from-cream-light/80 to-transparent pointer-events-none"
+      ></div>
+    }
+
+    <!-- Bottone "Leggi tutto" -->
+    @if ((vmReview()?.content?.length ?? 0) > 150) {
+      <button
+        (click)="isExpanded = !isExpanded"
+        class="mt-1 text-sm font-semibold text-brown-dark hover:text-orange-soft transition-colors cursor-pointer leading-normal"
+      >
+        {{ isExpanded ? 'Mostra meno' : 'Leggi tutto' }}
+      </button>
+    }
+  </div>
+
+  <!-- FOOTER -->
+  <div class="flex items-center justify-between flex-wrap gap-y-2">
+    <!-- SEZIONE VOTI -->
+    <div class="flex items-center gap-3">
+      <!-- UPVOTE -->
+      <button
+        class="upvote"
+        [class.active-up]="vmReview()?.userVote === 1"
+        [class.cursor-not-allowed]="!isLoggedIn()"
+        (click)="onVote('up')"
+        [attr.title]="!isLoggedIn() ? 'Accedi per votare' : 'Upvote'"
+        aria-label="Upvote"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8">
+          <path d="M12 3 L19 11 H15 V21 H9 V11 H5 Z"></path>
+        </svg>
+      </button>
+
+      <span class="text-brown-dark font-medium text-base">{{ vmReview()?.upvotes }}</span>
+
+      <!-- DOWNVOTE -->
+      <button
+        class="downvote"
+        [class.active-down]="vmReview()?.userVote === -1"
+        [class.cursor-not-allowed]="!isLoggedIn()"
+        (click)="onVote('down')"
+        [attr.title]="!isLoggedIn() ? 'Accedi per votare' : 'Downvote'"
+        aria-label="Downvote"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8">
+          <path d="M12 21 L5 13 H9 V3 H15 V13 H19 Z"></path>
+        </svg>
+      </button>
+
+      <span class="text-brown-dark font-medium text-base">{{ vmReview()?.downvotes }}</span>
+    </div>
+
+    <!-- BOTTONE SCOPRI -->
+    <a
+      (click)="onDiscover()"
+      class="inline-flex flex-col sm:flex-row items-center sm:justify-center text-center px-2 py-1.5 sm:px-3 sm:py-2 
+        text-xs sm:text-sm font-semibold rounded-lg bg-brown-dark text-cream-light hover:bg-orange-soft focus:ring-4 
+        focus:outline-none focus:ring-orange-soft transition-all duration-300 cursor-pointer leading-tight"
+    >
+      <span class="block sm:inline">Scopri il</span>
+      <span class="block sm:ml-1">ristorante</span>
+      <svg
+        class="w-3.5 h-3.5 sm:ms-2 rtl:rotate-180 mt-1 sm:mt-0"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 10"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M1 5h12m0 0L9 1m4 4L9 9"
+        />
+      </svg>
+    </a>
+  </div>
+</div>

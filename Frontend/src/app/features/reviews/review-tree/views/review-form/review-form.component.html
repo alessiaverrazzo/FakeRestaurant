@@ -1,0 +1,53 @@
+<div class="w-full p-3 bg-cream-light rounded-xl">
+  <!-- TEXTAREA -->
+  <textarea
+    [ngModel]="content()"
+    (ngModelChange)="onInput($event)"
+    class="w-full rounded-lg p-3 border border-brown-dark/20 text-sm bg-white-background resize-none"
+    rows="3"
+    [placeholder]="placeholder"
+  ></textarea>
+
+  <!-- COUNTER -->
+  <div
+    class="mt-1 text-right text-xs font-medium"
+    [ngClass]="counterColor"
+  >
+    {{ length }} / {{ maxLength }}
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="flex gap-2 mt-3">
+    <!-- INVIA + tooltip login -->
+    <div class="relative group">
+      <button
+        class="px-4 py-1.5 rounded-md bg-orange-soft text-brown-dark text-sm font-semibold transition hover:opacity-80"
+        (click)="onSubmit()"
+        [class.opacity-50]="overLimit || !isLoggedIn"
+        [class.cursor-not-allowed]="overLimit || !isLoggedIn"
+      >
+        Invia
+      </button>
+
+      <!-- Tooltip login -->
+      @if (!isLoggedIn) {
+      <div
+        class="absolute left-1/2 -translate-x-1/2 -top-10 
+          bg-cream-light border border-brown-dark/30 text-brown-dark
+          px-3 py-1 rounded-lg text-xs shadow
+          opacity-0 group-hover:opacity-100 transition pointer-events-none"
+      >
+        Devi accedere per inviare
+      </div>
+      }
+    </div>
+
+    <!-- CANCEL -->
+    <button
+      class="px-4 py-1.5 rounded-md bg-brown-dark/20 text-brown-dark text-sm hover:bg-brown-dark/30 transition"
+      (click)="cancel.emit()"
+    >
+      Annulla
+    </button>
+  </div>
+</div>

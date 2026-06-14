@@ -1,0 +1,22 @@
+<div class="min-h-screen bg-white-background px-4 md:px-8 pb-10">
+  <div class="items-center gap-2 mb-6">
+    <button
+      class="flex items-center gap-2 text-brown-dark font-semibold hover:text-orange-soft transition"
+      (click)="goBackToRestaurant()"
+    >
+      <span class="text-xl leading-none">&larr;</span>
+      <span>Torna al ristorante</span>
+    </button>
+
+    <h1 class="pt-2 text-xl md:text-2xl font-bold text-brown-dark">
+      Thread recensione
+    </h1>
+  </div>
+
+  <app-review-tree
+    [restaurantId]="restaurantId"
+    [isLoggedIn]="isLoggedIn"
+    [loggedUserId]="loggedUserId"
+    [startingReviewId]="startingReviewId"
+  ></app-review-tree>
+</div>

@@ -1,0 +1,58 @@
+<div class="w-full flex flex-col gap-8">
+  <!-- FORM ROOT -->
+  @if (!startingReviewId) {
+    <app-review-form
+      placeholder="Scrivi una recensione onestissima ✍️"
+      [isLoggedIn]="isLoggedIn"
+      (submitForm)="onSubmitRootReview($event)"
+    ></app-review-form>
+  }
+
+  <!-- FILTRO ORDINAMENTO -->
+  @if (!startingReviewId) {
+    <div class="flex items-center gap-3">
+      <button 
+        class="px-3 py-1 rounded-full text-sm font-semibold border border-[var(--brown-dark)]
+          hover:bg-[var(--cream-light)] transition"
+        [class.bg-[var(--yellow-primary)]]="sortMode() === 'best'"
+        (click)="changeSort('best')"
+      >
+        Best
+      </button>
+
+      <button 
+        class="px-3 py-1 rounded-full text-sm font-semibold border border-[var(--brown-dark)]
+          hover:bg-[var(--cream-light)] transition"
+        [class.bg-[var(--yellow-primary)]]="sortMode() === 'newest'"
+        (click)="changeSort('newest')"
+      >
+        Più recenti
+      </button>
+
+      <button 
+        class="px-3 py-1 rounded-full text-sm font-semibold border border-[var(--brown-dark)]
+          hover:bg-[var(--cream-light)] transition"
+        [class.bg-[var(--yellow-primary)]]="sortMode() === 'oldest'"
+        (click)="changeSort('oldest')"
+      >
+        Più vecchie
+      </button>
+    </div>
+  }
+
+  <!-- LISTA ROOT -->
+  @for (review of reviewsTree(); track review.id) {
+    <app-review-item
+      [review]="review"
+      [isLoggedIn]="isLoggedIn"
+      [loggedUserId]="loggedUserId"
+      [startingReviewId]="startingReviewId"
+      [startingLevel]="0"
+      (openThread)="onOpenThread($event)"
+      (replyCreated)="onReplyCreated($event)"
+      (reviewUpdated)="onReviewUpdated($event)"
+      (reviewDeleted)="onDeleteReview($event)"
+      (vote)="onVote($event.type, $event.id)"
+    ></app-review-item>
+  }
+</div>

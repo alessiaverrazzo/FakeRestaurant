@@ -1,0 +1,203 @@
+/* ======================================================
+   GLOBAL WRAPPER
+   ====================================================== */
+
+:host {
+  display: block;
+}
+
+/* ======================================================
+   FRECCE DI UPVOTE / DOWNVOTE
+   ====================================================== */
+
+.vote-btn {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  touch-action: manipulation;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.vote-btn:hover {
+  transform: scale(1.10);
+}
+
+.vote-btn:active {
+  transform: scale(0.92);
+}
+
+.vote-btn svg path {
+  fill: transparent;
+  stroke: var(--brown-dark);
+  stroke-width: 2.2;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+/* HOVER COLORI */
+.upvote:hover svg path {
+  fill: var(--green-accent);
+}
+
+.downvote:hover svg path {
+  fill: var(--red-accent);
+}
+
+/* ACTIVE STATES */
+.upvote.active-up svg path {
+  fill: var(--green-accent);
+  stroke: var(--brown-dark);
+}
+
+.downvote.active-down svg path {
+  fill: var(--red-accent);
+  stroke: var(--brown-dark);
+}
+
+/* Frecce MOBILE più piccole */
+@media (max-width: 639px) {
+  .vote-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+/* Desktop — ripristina dimensioni originali */
+@media (min-width: 640px) {
+  .vote-btn svg {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+/* Non loggato */
+.cursor-not-allowed {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* ======================================================
+   TOOLTIP LOGIN
+   ====================================================== */
+
+.tooltip {
+  background: var(--brown-dark);
+  color: var(--yellow-primary);
+
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.4rem;
+  line-height: 1.1;
+  white-space: nowrap;
+
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 20;
+}
+
+.relative:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Mobile: mostra anche al tap */
+.vote-btn:active .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   LINEE VERTICALI (CONTINUE)
+   ====================================================== */
+
+/* Contenitore che avvolge i figli: linee verticali */
+.border-l {
+  position: relative;
+  border-left: 2px solid var(--brown-dark);
+}
+
+/* Livelli profondi: linee più chiare e sottili */
+:host-context(.level-2) .border-l {
+  border-left-color: color-mix(in srgb, var(--brown-dark) 60%, transparent);
+}
+
+:host-context(.level-3) .border-l {
+  border-left-color: color-mix(in srgb, var(--brown-dark) 40%, transparent);
+}
+
+:host-context(.level-4) .border-l {
+  border-left-color: color-mix(in srgb, var(--brown-dark) 25%, transparent);
+}
+
+
+/* ======================================================
+   ANIMAZIONE MODALE CANCELLA RECENSIONE
+   ====================================================== */
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.20s ease-out;
+}
+
+/* ======================================================
+   HIGHLIGHT NUOVA RECENSIONE / REPLICA
+   ====================================================== */
+.highlight-review {
+  animation: glow 1.5s ease-in-out 0s 2;
+  background-color: var(--yellow-soft);
+  border-left: 4px solid var(--orange-soft);
+}
+
+@keyframes glow {
+  0% { background-color: var(--yellow-soft); }
+  50% { background-color: var(--yellow-primary); }
+  100% { background-color: var(--yellow-soft); }
+}
+
+/* ======================================================
+  BADGE NOTIFICA 
+  ====================================================== */
+
+.notification-badge {
+  display: inline-block;
+  background-color: color-mix(in srgb, var(--yellow-primary) 40%, white);
+  border: 1px solid color-mix(in srgb, var(--yellow-primary) 50%, transparent);
+  color: var(--brown-dark);
+
+  padding: 4px 12px;
+  border-radius: 12px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  margin-bottom: 8px;
+  width: fit-content;
+
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

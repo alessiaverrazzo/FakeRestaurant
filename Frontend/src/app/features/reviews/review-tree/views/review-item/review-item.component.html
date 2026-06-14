@@ -1,0 +1,274 @@
+<div 
+  class="w-full flex flex-col"
+  [style.padding-left.px]="indentPx"
+  [class.has-parent]="review.level > 0"
+  [class.level-2]="review.level === 2"
+  [class.level-3]="review.level === 3"
+  [class.level-4]="review.level >= 4"
+  [class.highlight-review]="review.isHighlighted === true"
+  [attr.id]="'review-' + review.id"
+>
+  <div class="flex gap-3 py-4">
+    <!-- SEZIONE VOTI DESKTOP -->
+    <div class="hidden sm:flex items-center gap-3 select-none">
+      <!-- UPVOTE -->
+      <div class="relative group">
+        <button
+          class="upvote vote-btn relative"
+          [class.active-up]="review.userVote === 1"
+          [class.cursor-not-allowed]="!isLoggedIn"
+          aria-label="Upvote"
+          (click)="toggleVote('up')"
+        >
+          <svg viewBox="0 0 24 24" class="w-7 h-7">
+            <path d="M12 3 L19 11 H15 V21 H9 V11 H5 Z"></path>
+          </svg>
+          @if (!isLoggedIn) {
+            <div class="tooltip absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap">
+              Devi essere loggato per votare
+            </div>
+          }
+        </button>
+      </div>
+
+      <span class="text-brown-dark font-medium text-sm">
+        {{ review.upvotes }}
+      </span>
+
+      <!-- DOWNVOTE -->
+      <div class="relative group">
+        <button
+          class="downvote vote-btn relative"
+          [class.active-down]="review.userVote === -1"
+          [class.cursor-not-allowed]="!isLoggedIn"
+          aria-label="Downvote"
+          (click)="toggleVote('down')"
+        >
+          <svg viewBox="0 0 24 24" class="w-7 h-7">
+            <path d="M12 21 L5 13 H9 V3 H15 V13 H19 Z"></path>
+          </svg>
+          @if (!isLoggedIn) {
+            <div class="tooltip absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap">
+              Devi essere loggato per votare
+            </div>
+          }
+        </button>
+      </div>
+
+      <span class="text-brown-dark font-medium text-sm">
+        {{ review.downvotes }}
+      </span>
+    </div>
+
+    <!-- CONTENUTO -->
+    <div class="flex-1">
+      @if (review.isHighlighted && review.highlightSource === 'notification') {
+        <div class="notification-badge">
+          🔔 Evidenziato da una tua notifica
+        </div>
+      }
+
+      <!-- HEADER -->
+      <div class="flex items-center gap-2 text-sm mb-1">
+        <img 
+          class="w-6 h-6 rounded-full object-cover"
+          [src]="'assets/user-icons/icon' + review.user?.iconId + '.png'"
+        />
+        <span class="font-semibold text-brown-dark">{{ review.user?.username }}</span>
+        <span class="text-brown-dark/50 text-xs">
+          • {{ review.createdAt | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+      </div>
+
+      <!-- TESTO -->
+      @if (!editMode) {
+        <p class="text-brown-dark text-sm whitespace-pre-line break-all max-w-full">
+          {{ review.content | truncate:500 }}
+        </p>
+      }
+
+      <!-- MODIFICA -->
+      @if (editMode) {
+        <div class="mt-2">
+          <textarea
+            class="w-full rounded-lg p-2 border border-brown-dark/20 text-sm bg-white-background resize-none"
+            [(ngModel)]="editContent"
+            rows="3"
+            maxlength="500"
+          ></textarea>
+          <div class="flex gap-2 mt-2">
+            <button class="px-3 py-1 rounded-md bg-yellow-primary text-brown-dark" (click)="saveEdit()">Salva</button>
+            <button class="px-3 py-1 rounded-md bg-brown-dark/20" (click)="cancelEdit()">Annulla</button>
+          </div>
+        </div>
+      }
+
+      <!-- AZIONI + FRECCE MOBILE -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-2 text-xs text-brown-dark/70">
+        <!-- AZIONI -->
+        <div class="flex gap-4">
+          <!-- RISPOSTA -->
+          <button
+            class="hover:text-brown-dark transition"
+            (click)="isLoggedIn ? toggleReplyForm() : null"
+            [class.cursor-not-allowed]="!isLoggedIn"
+          >
+            Rispondi
+          </button>
+
+          <!-- MODIFICA -->
+          @if (isLoggedIn && review.userId === loggedUserId) {
+            <button class="hover:text-brown-dark transition" (click)="toggleEditMode()">Modifica</button>
+          }
+
+          <!-- CANCELLA -->
+          @if (isLoggedIn && review.userId === loggedUserId) {
+            <button
+              class="hover:text-red-accent transition font-semibold"
+              (click)="openDeleteModal()"
+            >
+              Elimina
+            </button>
+          }
+
+          <!-- APRI THREAD (SOLO SE shouldOpenThread() === TRUE) -->
+          @if (shouldOpenThread()) {
+            <button
+              class="hover:text-brown-dark transition"
+              (click)="onOpenThreadClick()"
+            >
+              Apri thread
+            </button>
+          }
+        </div>
+
+        <!-- SEZIONE VOTI MOBILE -->
+        <div class="mt-2 sm:mt-0 flex items-center gap-3 select-none sm:hidden">
+          <!-- UPVOTE -->
+          <div class="relative group">
+            <button
+              class="upvote vote-btn relative"
+              [class.active-up]="review.userVote === 1"
+              [class.cursor-not-allowed]="!isLoggedIn"
+              aria-label="Upvote"
+              (click)="toggleVote('up')"
+            >
+              <svg viewBox="0 0 24 24" class="w-5 h-5">
+                <path d="M12 3 L19 11 H15 V21 H9 V11 H5 Z"></path>
+              </svg>
+              @if (!isLoggedIn) {
+                <div class="tooltip absolute -top-7 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap">
+                  Devi essere loggato per votare
+                </div>
+              }
+            </button>
+          </div>
+
+          <span class="text-brown-dark font-medium text-xs">
+            {{ review.upvotes }}
+          </span>
+
+          <!-- DOWNVOTE -->
+          <div class="relative group">
+            <button
+              class="downvote vote-btn relative"
+              [class.active-down]="review.userVote === -1"
+              [class.cursor-not-allowed]="!isLoggedIn"
+              aria-label="Downvote"
+              (click)="toggleVote('down')"
+            >
+              <svg viewBox="0 0 24 24" class="w-5 h-5">
+                <path d="M12 21 L5 13 H9 V3 H15 V13 H19 Z"></path>
+              </svg>
+              @if (!isLoggedIn) {
+                <div class="tooltip absolute -top-7 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap">
+                  Devi essere loggato per votare
+                </div>
+              }
+            </button>
+          </div>
+
+          <span class="text-brown-dark font-medium text-xs">
+            {{ review.downvotes }}
+          </span>
+        </div>
+      </div>
+
+      <!-- FORM RISPOSTA -->
+      @if (review.replyFormOpen) {
+        <div class="mt-3 p-3 bg-cream-light rounded-xl">
+          <textarea
+            class="w-full rounded-lg p-2 border border-brown-dark/20 text-sm bg-white-background resize-none"
+            placeholder="Scrivi una risposta..."
+            [(ngModel)]="replyContent"
+            maxlength="500"
+          ></textarea>
+          <div class="mt-1 text-right text-xs font-medium" [ngClass]="replyCounterColor">
+            {{ replyLength }} / {{ maxReplyLength }}
+          </div>
+
+          <div class="flex gap-2 mt-2">
+            <button
+              class="px-3 py-1 rounded-md bg-yellow-primary text-brown-dark"
+              (click)="submitReply()"
+              [class.cursor-not-allowed]="!isLoggedIn || replyOverLimit"
+              [class.opacity-50]="!isLoggedIn || replyOverLimit"
+            >
+              Invia
+            </button>
+            <button class="px-3 py-1 rounded-md bg-brown-dark/20" (click)="toggleReplyForm()">Annulla</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- FIGLI -->
+  @if (review.replies.length > 0) {
+    <div class="pl-3 border-l border-brown-dark/20">
+      @for (child of review.replies; track child.id) {
+        <app-review-item
+          [review]="child"
+          [isLoggedIn]="isLoggedIn"
+          [loggedUserId]="loggedUserId"
+          (openThread)="openThread.emit($event)"
+          (replyCreated)="replyCreated.emit($event)"
+          (vote)="vote.emit($event)"
+          (reviewUpdated)="reviewUpdated.emit($event)"
+          (reviewDeleted)="reviewDeleted.emit($event)"
+        ></app-review-item>
+      }
+    </div>
+  }
+
+  <!-- MODALE ELIMINAZIONE -->
+  @if (showDeleteModal) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
+      <div class="bg-white-background border border-brown-dark/30 rounded-2xl p-6 w-[90%] max-w-md shadow-xl animate-scaleIn">
+        <h2 class="text-xl font-bold text-brown-dark mb-3">
+          Eliminare la recensione?
+        </h2>
+        <p class="text-brown-dark mb-4 leading-relaxed">
+          Questa azione è definitiva. Confermi di voler procedere?
+        </p>
+
+        <div class="flex flex-col gap-3 mt-4">
+          <button
+            class="w-full bg-red-accent text-white-background font-semibold py-2 rounded-xl
+              hover:bg-red-accent/90 active:scale-95 transition"
+            (click)="confirmDelete()"
+          >
+            Elimina recensione
+          </button>
+          <button
+            class="w-full bg-brown-dark/20 text-brown-dark font-semibold py-2 rounded-xl
+              hover:bg-brown-dark/30 active:scale-95 transition"
+            (click)="closeDeleteModal()"
+          >
+            Annulla
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

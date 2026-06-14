@@ -1,0 +1,163 @@
+/* ======================================================
+   IMMAGINE ANTI-STRETCH
+   ====================================================== */
+
+.image-wrapper {
+  width: 100%;
+  height: 280px;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .image-wrapper {
+    height: 360px;
+  }
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .restaurant-image {
+    object-fit: cover;
+  }
+}
+
+/* ======================================================
+   MINI MAP WRAPPER (ALTEZZA STABILE PER LEAFLET)
+   ====================================================== */
+
+.mini-map-wrapper {
+  width: 100%;
+  height: 280px; /* mobile */
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .mini-map-wrapper {
+    height: 360px; /* desktop — MATCH con image-wrapper */
+  }
+}
+
+/* Leaflet container si espande grazie a mini-map.component.scss */
+.mini-map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ======================================================
+   FRECCE DI UPVOTE / DOWNVOTE
+   ====================================================== */
+
+.vote-btn {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  touch-action: manipulation;
+}
+
+.vote-btn:active {
+  transform: scale(0.92);
+}
+
+.vote-btn:hover {
+  transform: scale(1.10);
+}
+
+.vote-btn svg path {
+  fill: transparent;
+  stroke: var(--brown-dark);
+  stroke-width: 2.2;
+}
+
+/* HOVER EFFECTS */
+.upvote:hover svg path {
+  fill: var(--green-accent);
+}
+
+.downvote:hover svg path {
+  fill: var(--red-accent);
+}
+
+/* ACTIVE STATES */
+.upvote.active-up svg path {
+  fill: var(--green-accent);
+}
+
+.downvote.active-down svg path {
+  fill: var(--red-accent);
+}
+
+/* NON LOGGATO (solo visivo) */
+.cursor-not-allowed,
+.opacity-50 {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+
+/* ======================================================
+   TOOLTIP LOGIN
+   ====================================================== */
+
+.tooltip {
+  background: var(--brown-dark);
+  color: var(--yellow-primary);
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 999;
+}
+
+/* Mostra il tooltip quando il parent è hover/focus */
+.group:hover .tooltip,
+.group:focus-within .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* mostra tooltip quando si tocca il pulsante */
+.vote-btn:active + .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ======================================================
+   DESCRIZIONE COLLASSATA (GRADIENTE)
+   ====================================================== */
+
+.description-collapsed {
+  position: relative;
+}
+
+.description-collapsed::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3rem;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    var(--cream-light)
+  );
+  pointer-events: none;
+}

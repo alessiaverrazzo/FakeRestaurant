@@ -1,0 +1,34 @@
+@use "leaflet/dist/leaflet.css";
+@use "tailwindcss";
+
+/* ===============================
+   PALETTE TAILWIND (v4 @theme)
+   =============================== */
+@theme {
+  --color-yellow-primary: #FFE787;
+  --color-red-accent:      #EF4444;
+  --color-green-accent:    #84CC16;
+  --color-cream-light:     #FEF9C3;
+  --color-brown-dark:      #78350F;
+  --color-orange-soft:     #FB923C;
+  --color-yellow-soft:     #FDE68A;
+  --color-beige:           #F5E0B8;
+  --color-peach:           #FED7AA;
+  --color-white-background: #FFFFFF;
+}
+
+/* =========================================================
+   CSS CUSTOM PROPERTIES (opzionali ma utili per SCSS custom)
+   ========================================================= */
+:root {
+  --yellow-primary:       #FFE787;
+  --red-accent:           #EF4444;
+  --green-accent:         #84CC16;
+  --cream-light:          #FEF9C3;
+  --brown-dark:           #78350F;
+  --orange-soft:          #FB923C;
+  --yellow-soft:          #FDE68A;
+  --beige:                #F5E0B8;
+  --peach:                #FED7AA;
+  --white-background:     #FFFFFF;
+}

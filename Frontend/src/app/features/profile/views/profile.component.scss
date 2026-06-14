@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 53, 15, 0.3); /* brownDark/30 */
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+

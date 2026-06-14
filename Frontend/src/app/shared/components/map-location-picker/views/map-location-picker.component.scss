@@ -1,0 +1,84 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+/* =============================
+   BARRA DI RICERCA — STACK 10
+   ============================= */
+.search-wrapper {
+  position: relative;
+  z-index: 10;
+}
+
+.search-input {
+  position: relative;
+  z-index: 10;
+}
+
+/* =============================
+   DROPDOWN RISULTATI — STACK 20
+   ============================= */
+.search-dropdown {
+  position: absolute;
+  z-index: 20;
+  background: var(--white-background);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+/* =============================
+   MAPPA — NESSUN Z-INDEX
+   ============================= */
+.leaflet-map {
+  position: relative;
+  /* nessuno z-index */
+}
+
+/* =============================
+   LEAFLET PANES 
+   ============================= */
+.leaflet-container,
+.leaflet-pane,
+.leaflet-tile-pane,
+.leaflet-overlay-pane,
+.leaflet-shadow-pane,
+.leaflet-marker-pane,
+.leaflet-tooltip-pane,
+.leaflet-popup-pane,
+.leaflet-map-pane {
+  z-index: auto !important;
+}
+
+/* =============================
+   SLIDER 
+   ============================= */
+.radius-slider {
+  -webkit-appearance: none;
+  width: 300px;
+  height: 8px;
+  border-radius: 8px;
+  background: var(--brown-dark);
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--yellow-primary);
+    border: 2px solid var(--brown-dark);
+    border-radius: 50%;
+    cursor: grab;
+  }
+
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--yellow-primary);
+    border: 2px solid var(--brown-dark);
+    border-radius: 50%;
+    cursor: grab;
+  }
+}

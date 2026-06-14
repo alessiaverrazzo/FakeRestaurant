@@ -1,0 +1,103 @@
+/* ==========================================================
+   BOTTONI UPVOTE / DOWNVOTE
+   ========================================================== */
+
+.upvote,
+.downvote {
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hover: leggera crescita */
+.upvote:hover,
+.downvote:hover {
+  transform: scale(1.12);
+}
+
+/* Icone base */
+.upvote svg path,
+.downvote svg path {
+  fill: transparent;
+  stroke: var(--brown-dark);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.upvote:hover svg path {
+  fill: var(--green-accent);
+}
+
+.downvote:hover svg path {
+  fill: var(--red-accent);
+}
+
+.upvote.active-up svg path {
+  fill: var(--green-accent);
+}
+
+.downvote.active-down svg path {
+  fill: var(--red-accent);
+}
+
+.cursor-not-allowed {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================
+   RIMBALZO ANIMATO
+   ========================================================== */
+
+@keyframes bounce-up {
+  0%, 100%   { transform: translateY(0); }
+  50%        { transform: translateY(-4px); }
+}
+
+@keyframes bounce-down {
+  0%, 100%   { transform: translateY(0); }
+  50%        { transform: translateY(4px); }
+}
+
+/* ==========================================================
+   SVG – INTERAZIONI GLOBALI
+   ========================================================== */
+
+button svg path {
+  stroke-linejoin: round;
+}
+
+button:active svg {
+  transform: translateY(1px);
+  transition: transform 0.1s ease;
+}
+
+/* ==========================================================
+   RESPONSIVE OTTIMIZZATO PER MOBILE
+   ========================================================== */
+
+/* Riduce dimensione icone su schermi piccoli */
+@media (max-width: 480px) {
+  .upvote svg,
+  .downvote svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .upvote svg path,
+  .downvote svg path {
+    stroke-width: 2;
+  }
+}
+
+/* Spaziature più armoniose solo su mobile */
+@media (max-width: 480px) {
+  .vote-section {
+    gap: 16px !important;
+    padding-left: 0.25rem;
+  }
+
+  .details-button {
+    margin-top: 0.75rem;
+  }
+}

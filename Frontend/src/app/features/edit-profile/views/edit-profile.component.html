@@ -1,0 +1,194 @@
+<div class="w-full min-h-screen bg-white-background px-4 py-6 flex justify-center">
+  <div class="w-full max-w-xl sm:max-w-2xl md:max-w-3xl xl:max-w-3xl md:px-6 animate-fadeIn">
+    <!-- TITOLO -->
+    <h1 class="text-2xl font-bold text-brown-dark mb-6 text-center">
+      Modifica profilo
+    </h1>
+
+    <!-- CARD MODIFICA -->
+    <div class="bg-cream-light border border-brown-dark/30 rounded-2xl p-6 shadow-sm">
+      <!-- USERNAME -->
+      <label class="text-brown-dark font-semibold text-sm mb-1 block">
+        Username
+      </label>
+      <input
+        type="text"
+        class="w-full bg-white-background border border-brown-dark/40 rounded-xl
+          px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-soft transition mb-4"
+        [value]="vm.state().username"
+        (input)="vm.updateField('username', ($any($event.target).value ?? '').trim())"
+      />
+
+      <!-- ICONA -->
+      <label class="text-brown-dark font-semibold text-sm mb-2 block">
+        Icona profilo
+      </label>
+      <div class="grid grid-cols-4 sm:grid-cols-5 gap-4 mb-6">
+        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]; track i) {
+          <div
+            class="icon-wrapper"
+            [class.icon-selected]="vm.state().icon_id === i"
+            (click)="vm.updateField('icon_id', i)"
+          >
+            <img
+              [src]="'assets/user-icons/icon' + i + '.png'"
+              alt="User icon"
+              class="icon-img"
+            />
+          </div>
+        }
+      </div>
+
+      <!-- PASSWORD -->
+      <label class="text-brown-dark font-semibold text-sm mb-1 block">
+        Nuova password <span class="text-brown-dark/60">(opzionale)</span>
+      </label>
+      <div class="input-wrapper">
+        <input
+          type="password"
+          class="w-full bg-white-background border border-brown-dark/40 rounded-xl 
+            px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-soft transition mb-3"
+          [value]="vm.state().newPassword || ''"
+          (input)="vm.updateField('newPassword', $any($event.target).value ?? '')"
+        />
+      </div>
+
+      <!-- CONFERMA PASSWORD -->
+      <label class="text-brown-dark font-semibold text-sm mb-1 block">
+        Conferma password
+      </label>
+      <div class="input-wrapper">
+        <input
+          type="password"
+          class="w-full bg-white-background border border-brown-dark/40 rounded-xl 
+            px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-soft transition mb-2"
+          [value]="vm.state().confirmPassword || ''"
+          (input)="vm.updateField('confirmPassword', $any($event.target).value ?? '')"
+        />
+      </div>
+
+      <!-- ERRORI MULTIPLI LIVE -->
+      @if (vm.state().errors.length > 0) {
+        <ul class="mt-3 mb-4 space-y-1">
+          @for (err of vm.state().errors; track err) {
+            <li class="text-red-accent font-semibold text-sm">
+              {{ err }}
+            </li>
+          }
+        </ul>
+      }
+
+      <!-- SUCCESSO -->
+      @if (vm.state().success) {
+        <p class="text-green-accent font-semibold text-center mb-4">
+          {{ vm.state().success }}
+        </p>
+      }
+
+      <!-- BOTTONI -->
+      <div class="flex flex-col gap-3 mt-6">
+        <!-- SALVA -->
+        <button
+          class="fancy-save"
+          [disabled]="vm.state().loading || vm.state().errors.length > 0"
+          (click)="vm.submit()"
+        >
+          <span class="btn-icon">
+            @if (vm.state().loading) {
+              ⏳
+            } @else {
+              ✔
+            }
+          </span>
+          <span class="btn-text">
+            @if (vm.state().loading) {
+              Salvataggio...
+            } @else {
+              Salva modifiche
+            }
+          </span>
+        </button>
+
+        <!-- ANNULLA -->
+        <button
+          class="cancel-btn"
+          (click)="vm.cancelChanges()"
+        >
+          <span class="btn-icon">↩</span>
+          <span>Annulla modifiche</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ELIMINA ACCOUNT -->
+    <button
+      class="w-full flex items-center justify-center gap-2
+      bg-red-accent text-white-background font-semibold
+            rounded-xl py-3 shadow-sm
+            transition active:scale-95 hover:bg-red-accent/90"
+      (click)="vm.openDeleteModal()"
+    >
+      <span class="text-lg">🗑️</span>
+      <span>Elimina account</span>
+    </button>
+
+    <!-- TORNA AL PROFILO -->
+    <button routerLink="/profile" class="back-to-profile">
+      Torna al profilo
+    </button>
+  </div>
+
+  <!-- MODALE ELIMINA ACCOUNT -->
+  @if (vm.state().showDeleteModal) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+      <div class="bg-white-background border border-brown-dark/30 rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
+      <h2 class="text-xl font-bold text-brown-dark mb-3">
+        Conferma eliminazione
+      </h2>
+      <p class="text-brown-dark mb-4 leading-relaxed">
+        Sei sicura di voler eliminare il tuo account?<br />
+        <span class="font-semibold">Tutti i tuoi ristoranti e le tue recensioni verranno eliminati definitivamente.</span>
+      </p>
+
+      <!-- SUCCESSO / REDIRECT -->
+      @if (vm.state().deleteSuccess) {
+        <p class="text-green-accent font-bold text-center mb-4">
+          Account eliminato!<br />
+          Verrai reindirizzato/a alla home...
+        </p>
+      }
+
+      <div class="flex flex-col gap-3 mt-4">
+        @if (!vm.state().deleteSuccess) {
+          <!-- CONFERMA -->
+          <button
+            class="w-full bg-red-accent text-white-background font-semibold
+                  py-2 rounded-xl hover:bg-red-accent/90 active:scale-95 transition
+                  flex items-center justify-center gap-2"
+            [disabled]="vm.state().deleteLoading"
+            (click)="vm.confirmDeleteAccount()"
+          >
+            @if (vm.state().deleteLoading) {
+              <!-- Loader -->
+              <span class="inline-block w-5 h-5 border-2 border-white-background 
+                          border-t-transparent rounded-full animate-spin"></span>
+              <span>Eliminazione...</span>
+            } @else {
+              <span>Conferma eliminazione</span>
+            }
+          </button>
+
+          <!-- ANNULLA -->
+          <button
+            class="w-full bg-brown-dark/20 text-brown-dark font-semibold
+                   py-2 rounded-xl hover:bg-brown-dark/30 active:scale-95 transition"
+            (click)="vm.closeDeleteModal()"
+          >
+            Annulla
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+</div>

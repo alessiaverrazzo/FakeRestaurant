@@ -1,0 +1,88 @@
+<div class="relative notification-dropdown-container">
+  <!-- Icona campanella -->
+  <button
+    (click)="toggle()"
+    class="relative flex items-center justify-center p-2 rounded-full hover:bg-yellow-soft transition"
+    aria-label="Notifiche"
+    [class.swing]="vm.bellAnimate()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke-width="2"
+      stroke="currentColor"
+      class="w-6 h-6 text-brown-dark"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10 21h4a2 2 0 0 1-4 0zM5 8a7 7 0 1 1 14 0c0 1.89.72 3.63 1.9 4.95A1 1 0 0 1 20 15H4a1 1 0 0 1-.9-2.05A8 8 0 0 0 5 8z"
+      />
+    </svg>
+    @if (vm.hasUnread()) {
+      <span class="absolute top-1 right-1 w-3 h-3 bg-red-accent rounded-full"></span>
+    }
+  </button>
+
+  <!-- DROPDOWN -->
+  @if (vm.isOpen) {
+    <div class="absolute right-0 mt-3 w-80 z-[11000] bg-white-background rounded-xl shadow-xl border border-brown-dark p-3 animate-fadeIn">
+      @if (vm.loading()) {
+        <p class="text-sm text-brown-dark/70 py-3 text-center">Caricamento…</p>
+      }
+
+      @if (vm.error()) {
+        <p class="text-red-accent text-sm py-3 text-center">{{ vm.error() }}</p>
+      }
+
+      @if (!vm.loading() && !vm.error()) {
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-brown-dark font-semibold text-lg">Notifiche</h3>
+          <button
+            class="text-green-accent text-sm hover:underline"
+            (click)="vm.markAllAsRead()"
+          >
+            Segna tutto come letto
+          </button>
+        </div>
+
+        <!-- NESSUNA NOTIFICA -->
+        @if (!vm.loading() && !vm.error() && vm.visibleNotifications().length === 0) {
+          <div class="flex flex-col items-center justify-center py-6 opacity-70 select-none">
+            <div class="w-12 h-12 rounded-full border-2 border-brown-dark/40 flex items-center justify-center mb-2">
+              <span class="text-brown-dark text-base font-bold">☕</span>
+            </div>
+            <p class="text-brown-dark text-sm font-medium">
+              Nessuna notifica presente negli ultimi 7 giorni
+            </p>
+          </div>
+        }
+
+        <!-- Lista -->
+        <div class="space-y-2 max-h-80 overflow-y-auto">
+          @for (n of vm.visibleNotifications(); track n.id) {
+            <app-notification-item
+              [notification]="n"
+              (clicked)="onNotificationClick(n)"
+              (markAsRead)="vm.markAsRead($event)"
+              (delete)="vm.deleteNotification($event)"
+            ></app-notification-item>
+          }
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-3 pt-2 border-t border-brown-dark/20">
+          <button
+            type="button"
+            (click)="goToNotifications($event)"
+            class="w-full text-center text-brown-dark hover:text-orange-soft font-medium cursor-pointer transition"
+          >
+            Vedi tutte le notifiche →
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,118 @@
+<div class="w-full min-h-screen bg-white-background px-4 py-6 flex justify-center">
+  <div class="w-full max-w-6xl lg:max-w-7xl 2xl:max-w-8xl md:px-6">
+
+    <!-- RICERCA TESTUALE -->
+    <div class="mb-8">
+      <label class="block text-brown-dark font-semibold text-lg mb-2">
+        Cerca un ristorante per nome
+      </label>
+
+      <div class="flex gap-3">
+        <input
+          type="text"
+          [(ngModel)]="textQuery"
+          (keyup.enter)="searchByName()"
+          placeholder="Es. Trattoria Tecnologie Web"
+          class="flex-1 rounded-xl border border-brown-dark/30 px-4 py-2 text-brown-dark
+            placeholder:text-brown-dark/40 bg-white-background shadow-sm"
+        />
+
+        <button
+          (click)="searchByName()"
+          class="px-5 py-2 rounded-xl bg-brown-dark font-semibold text-yellow-primary
+            hover:bg-orange-soft transition shadow active:scale-95"
+        >
+          Cerca
+        </button>
+      </div>
+    </div>
+
+    <!-- RICERCA TRAMITE MAPPA -->
+    <div class="mb-14">
+      <label class="block text-brown-dark font-semibold text-lg mb-3">
+        Oppure cerca per posizione (seleziona un'area sulla mappa)
+      </label>
+
+      <app-map-location-picker
+        [enableRadiusSelection]="true"
+        (locationSelected)="onLocationSelected($event)"
+        (radiusChanged)="onRadiusChanged($event)"
+      ></app-map-location-picker>
+
+      <div class="flex justify-end mt-3">
+        <button
+          (click)="searchByPosition()"
+          class="px-5 py-2 rounded-xl bg-brown-dark text-yellow-primary font-semibold 
+            hover:bg-orange-soft transition shadow active:scale-95"
+        >
+          Cerca in questa zona
+        </button>
+      </div>
+    </div>
+
+    <!-- IL MEGLIO DELLE RECENSIONI -->
+    <h2 class="text-lg sm:text-xl font-bold text-brown-dark mb-3 ml-1">
+      ✨📝 Il meglio delle recensioni, forse
+    </h2>
+
+    @if (bestReviews.length > 0) {
+      <app-horizontal-scroller [scrollAmount]="360">
+        @for (r of bestReviews; track r.id) {
+          <div class="w-[260px] sm:w-[300px] md:w-[340px] lg:w-[360px]">
+            <app-review-card [review]="r" />
+          </div>
+        }
+      </app-horizontal-scroller>
+    } @else {
+      <div class="w-full p-5 rounded-xl bg-cream-light border border-brown-dark/20 text-brown-dark/70 text-sm">
+        Nessuna recensione disponibile.  
+        Quando qualcuno pubblicherà una recensione, apparirà qui! ✨
+      </div>
+    }
+
+    <div class="my-8 sm:my-10"></div>
+
+    <!-- CLASSIFICA STELLATA -->
+    <h2 class="text-lg sm:text-xl font-bold text-brown-dark mb-3 ml-1">
+      ⭐🍽️ Classifica stellata
+    </h2>
+
+    @if (topRated.length > 0) {
+      <app-horizontal-scroller [scrollAmount]="360">
+        @for (r of topRated; track r.id) {
+          <div class="w-[260px] sm:w-[300px] md:w-[340px] lg:w-[360px]">
+            <app-restaurant-card [data]="r" />
+          </div>
+        }
+      </app-horizontal-scroller>
+    } @else {
+      <div class="w-full p-5 rounded-xl bg-cream-light border border-brown-dark/20 text-brown-dark/70 text-sm">
+        Nessun ristorante votato.  
+        Appena ci saranno voti, vedrai la classifica qui! ⭐
+      </div>
+    }
+
+    <div class="my-8 sm:my-10"></div>
+
+    <!-- STELLE CADENTI -->
+    <h2 class="text-lg sm:text-xl font-bold text-brown-dark mb-3 ml-1">
+      😵💫 Stelle cadenti…
+    </h2>
+
+    @if (fallingStars.length > 0) {
+      <app-horizontal-scroller [scrollAmount]="360">
+        @for (r of fallingStars; track r.id) {
+          <div class="w-[260px] sm:w-[300px] md:w-[340px] lg:w-[360px]">
+            <app-restaurant-card [data]="r" />
+          </div>
+        }
+      </app-horizontal-scroller>
+    } @else {
+      <div class="w-full p-5 rounded-xl bg-cream-light border border-brown-dark/20 text-brown-dark/70 text-sm">
+        Nessun ristorante “in caduta”.  
+        Torna presto per vedere come va la situazione! 💫
+      </div>
+    }
+
+  </div>
+</div>

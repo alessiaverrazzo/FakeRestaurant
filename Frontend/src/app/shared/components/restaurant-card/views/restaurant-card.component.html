@@ -1,0 +1,109 @@
+<div class="bg-cream-light border border-brown-dark rounded-2xl p-4 shadow w-full max-w-3xl flex flex-col gap-4">
+  <!-- TITOLO -->
+  <h2
+    class="text-xl font-bold text-brown-dark hover:text-orange-soft cursor-pointer transition"
+    (click)="goToDetails()"
+  >
+    {{ vm.restaurant()?.name }}
+  </h2>
+
+  <!-- RIGA IMMAGINE + MAPPA -->
+  @if (vm.restaurant()?.imageUrl) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- IMMAGINE -->
+      <div class="w-full h-40 md:h-48 rounded-xl overflow-hidden bg-transparent flex items-center justify-center">
+        <img
+          [src]="vm.restaurant()?.imageUrl!"
+          class="w-full h-full object-contain"
+          alt="Immagine ristorante"
+        />
+      </div>
+
+      <!-- MINI-MAPPA -->
+      <app-mini-map
+        [latitude]="vm.restaurant()?.latitude!"
+        [longitude]="vm.restaurant()?.longitude!"
+        [name]="vm.restaurant()?.name!"
+        class="block w-full h-40 md:h-full rounded-xl overflow-hidden"
+      ></app-mini-map>
+    </div>
+  } @else {
+    <!-- SOLO MAPPA SE NON C'È IMMAGINE -->
+    <app-mini-map
+      [latitude]="vm.restaurant()?.latitude!"
+      [longitude]="vm.restaurant()?.longitude!"
+      [name]="vm.restaurant()?.name!"
+      class="block w-full h-40 md:h-48"
+    ></app-mini-map>
+  }
+
+  <!-- DESCRIZIONE -->
+  <p class="text-brown-dark/80 text-sm leading-snug">
+    {{ vm.shortDescription }}
+  </p>
+
+  <!-- AREA VOTI + BOTTONE -->
+  <div class="flex flex-col gap-3 px-2 mt-2 lg:flex-row lg:items-center lg:justify-between lg:mt-3">
+    <!-- VOTI -->
+    <div class="flex items-center gap-6 lg:gap-4">
+      <!-- UPVOTE -->
+      <div class="flex items-center gap-1">
+        <button
+          class="upvote"
+          [class.active-up]="vm.userVote() === 1"
+          [class.cursor-not-allowed]="!vm.isLoggedIn()"
+          (click)="voteUp()"
+          [attr.title]="!vm.isLoggedIn() ? 'Accedi per votare' : 'Upvote'"
+          aria-label="Upvote"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 lg:w-8 lg:h-8">
+            <path d="M12 3 L19 11 H15 V21 H9 V11 H5 Z"></path>
+          </svg>
+        </button>
+        <span class="text-brown-dark font-medium text-base">
+          {{ vm.netUpvotes() }}
+        </span>
+      </div>
+
+      <!-- DOWNVOTE -->
+      <div class="flex items-center gap-1">
+        <button
+          class="downvote"
+          [class.active-down]="vm.userVote() === -1"
+          [class.cursor-not-allowed]="!vm.isLoggedIn()"
+          (click)="voteDown()"
+          [attr.title]="!vm.isLoggedIn() ? 'Accedi per votare' : 'Downvote'"
+          aria-label="Downvote"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 lg:w-8 lg:h-8">
+            <path d="M12 21 L5 13 H9 V3 H15 V13 H19 Z"></path>
+          </svg>
+        </button>
+        <span class="text-brown-dark font-medium text-base">
+          {{ vm.netDownvotes() }}
+        </span>
+      </div>
+    </div>
+
+    <!-- BOTTONE DETTAGLI -->
+    <button
+      class="details-button w-full lg:w-auto flex items-center justify-center gap-1 sm:gap-2
+        bg-brown-dark text-yellow-primary font-semibold px-3 py-2 sm:px-4 rounded-full
+        text-sm sm:text-base whitespace-nowrap max-w-full overflow-hidden text-ellipsis
+        hover:bg-orange-soft transition"
+      (click)="goToDetails()"
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4 sm:w-5 sm:h-5 shrink-0">
+        <path
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="truncate">Scopri di più</span>
+    </button>
+  </div>
+</div>

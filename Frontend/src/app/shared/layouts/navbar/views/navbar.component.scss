@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+/* ==========================
+   STRUTTURA GENERALE NAVBAR
+   ========================== */
+nav {
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+  height: 5rem; /* 80px */
+  overflow: visible;
+  position: relative;
+}
+
+/* ==========================
+   OMBRA SU SCROLL
+   ========================== */
+.navbar-shadow {
+  box-shadow: 0 4px 10px rgba(120, 53, 15, 0.25);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ==========================
+   ANIMAZIONE ENTRATA NAVBAR
+   ========================== */
+@keyframes navbarFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================
+   ANIMAZIONE CLICK LOGO
+   ========================== */
+.animate-clickable {
+  position: relative;
+
+  img:active {
+    transform: scale(0.92);
+    filter: brightness(0.95);
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  &:focus-visible img {
+    outline: 2px solid var(--brown-dark);
+    outline-offset: 3px;
+  }
+}
+
+/* ==========================
+   ANIMAZIONE MENU MOBILE
+   ========================== */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.25s ease-out both;
+}
+
+/* ==========================
+   ELEMENTI INTERNI
+   ========================== */
+a,
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover,
+button:hover {
+  filter: brightness(1.05);
+}
+
+button svg {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+button:hover svg {
+  transform: translateY(-1px);
+}
+

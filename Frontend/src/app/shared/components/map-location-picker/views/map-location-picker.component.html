@@ -1,0 +1,83 @@
+<div class="space-y-3 w-full">
+  <!-- BARRA DI RICERCA -->
+  @if (showSearchBar) {
+    <div class="relative search-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="searchAddress($event)"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="Cerca indirizzo, città o paese..."
+        class="search-input w-full rounded-xl border px-3 py-2 text-sm border-brown-dark/20 bg-white-background
+          placeholder:text-brown-dark/40"
+      />
+
+      <!-- DROPDOWN RISULTATI -->
+      @if (searchResults.length > 0) {
+        <ul
+          class="search-dropdown absolute left-0 right-0 bg-white-background border border-brown-dark/30 
+            rounded-xl shadow-xl max-h-60 overflow-y-auto mt-2 z-30"
+        >
+          @for (item of searchResults; track $index) {
+            <li
+              (click)="selectSearchResult(item)"
+              class="px-3 py-2 cursor-pointer hover:bg-yellow-soft transition text-sm text-brown-dark"
+            >
+              {{ item.display_name }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+
+  <!-- MAPPA -->
+  <div class="relative z-0">
+    <div
+      #mapContainer
+      class="leaflet-map w-full h-64 md:h-80 rounded-2xl overflow-hidden border border-brown-dark/20 shadow"
+    ></div>
+
+    <!-- ZOOM BUTTONS -->
+    <div class="absolute top-3 right-3 flex flex-col gap-2 z-[9999]">
+      <button
+        (click)="zoomIn()"
+        class="w-10 h-10 rounded-xl bg-white-background border border-brown-dark/30 
+          shadow flex items-center justify-center text-brown-dark text-xl hover:bg-yellow-soft transition"
+      >
+        +
+      </button>
+      <button
+        (click)="zoomOut()"
+        class="w-10 h-10 rounded-xl bg-white-background border border-brown-dark/30 
+          shadow flex items-center justify-center text-brown-dark text-xl hover:bg-yellow-soft transition"
+      >
+        –
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDER RAGGIO -->
+  @if (enableRadiusSelection) {
+    <div class="flex flex-col md:flex-row md:items-center gap-3 pt-2">
+      <label class="text-sm font-medium text-brown-dark">
+        Raggio di ricerca (km)
+      </label>
+      <input
+        type="range"
+        min="5"
+        max="40"
+        [value]="currentRadiusKm"
+        (input)="onRadiusInput($any($event.target).value)"
+        class="radius-slider"
+        [disabled]="!marker"
+      />
+      <span class="text-sm font-semibold text-brown-dark">
+        {{ currentRadiusKm }} km
+      </span>
+    </div>
+  }
+</div>

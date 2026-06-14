@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Alessia\\Documents\\Universita\\III anno\\Tecnologie Web\\Progetto\\Backend - Copia\\logs\\.b20a19caa7f8e0310036d380dbf4f38274a01cd1-audit.json",
+    "files": [
+        {
+            "date": 1756978421604,
+            "name": "D:\\Alessia\\Documents\\Universita\\III anno\\Tecnologie Web\\Progetto\\Backend - Copia\\logs\\app-2025-09-04.log",
+            "hash": "cdb3b6c8021ade0a67cffc8f20bbedb4a7ebb93445047ea6c5a0f8172601e1c1"
+        }
+    ],
+    "hashType": "sha256"
+}

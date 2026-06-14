@@ -1,0 +1,72 @@
+<!-- HEADER -->
+<div class="flex items-center justify-between mb-4 px-4">
+  <h1 class="text-2xl font-bold text-brown-dark">Notifiche</h1>
+
+  <button
+    class="text-sm font-semibold text-brown-dark hover:text-green-accent transition"
+    (click)="vm.markAllAsRead()"
+    [disabled]="vm.loading()"
+  >
+    Segna tutto come letto
+  </button>
+</div>
+
+<!-- CONTENUTO PAGINA -->
+<div class="space-y-6 mt-4 px-4">
+  <!-- LOADING INIZIALE -->
+  @if (vm.loading() && vm.visibleNotifications().length === 0) {
+    <div class="flex justify-center py-6">
+      <span class="text-brown-dark text-sm animate-pulse">
+        Caricamento notifiche…
+      </span>
+    </div>
+  }
+
+  <!-- NESSUNA NOTIFICA -->
+  @if (!vm.loading() && vm.visibleNotifications().length === 0) {
+    <div class="flex flex-col items-center justify-center py-10 opacity-70 select-none">
+      <div
+        class="w-14 h-14 rounded-full border-2 border-brown-dark/40 flex items-center justify-center mb-3"
+      >
+        <span class="text-brown-dark text-xl font-bold">☕</span>
+      </div>
+
+      <p class="text-brown-dark text-sm font-medium">
+        Nessuna notifica presente
+      </p>
+    </div>
+  }
+
+  <!-- LISTA NOTIFICHE -->
+  @if (vm.visibleNotifications().length > 0) {
+    @for (section of vm.groupedNotifications() | keyvalue; track section.key) {
+      <div class="animate-fadeIn">
+        <!-- DIVISORE TEMPORALE -->
+        <h2 class="text-lg font-semibold text-brown-dark mb-2 sticky top-0 bg-white-background z-10 py-2">
+          {{ section.key }}
+        </h2>
+
+        <div class="space-y-2">
+          @for (n of section.value; track n.id) {
+            <app-notification-item
+              [notification]="n"
+              (clicked)="onNotificationClick($event)"
+              (delete)="vm.deleteNotification($event)"
+              (markAsRead)="vm.markAsRead($event)"
+            ></app-notification-item>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- SENTINEL PER INFINITE SCROLL -->
+    <div #scrollAnchor class="h-6"></div>
+
+    <!-- LOADING DURANTE SCROLL -->
+    @if (vm.loading()) {
+      <div class="flex justify-center py-4">
+        <span class="text-brown-dark text-sm animate-pulse">Caricamento…</span>
+      </div>
+    }
+  }
+</div>

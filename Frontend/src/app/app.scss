@@ -1,0 +1,26 @@
+@use "../styles.scss" as *;
+
+.app-content {
+  height: calc(100vh - 5rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.test-section {
+  background-color: var(--color-creamLight);
+  color: var(--color-brownDark);
+}
+
+.test-btn {
+  background-color: var(--color-greenAccent);
+  color: var(--color-whiteBackground);
+}
+
+/* scrollbar hide */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

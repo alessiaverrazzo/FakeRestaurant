@@ -1,0 +1,79 @@
+/* ===========================
+   FRECCE UPVOTE / DOWNVOTE
+   =========================== */
+
+button svg {
+  width: 2rem;
+  height: 2rem;
+  stroke-width: 2.2;
+  fill: transparent;
+  stroke: var(--brown-dark);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+
+button.upvote:hover svg path {
+  fill: var(--green-accent);
+}
+
+button.downvote:hover svg path {
+  fill: var(--red-accent);
+}
+
+button.active-up svg path {
+  fill: var(--green-accent);
+  stroke: var(--brown-dark);
+  filter: drop-shadow(0 0 4px rgba(132, 204, 22, 0.4));
+}
+
+button.active-down svg path {
+  fill: var(--red-accent);
+  stroke: var(--brown-dark);
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.4));
+}
+
+@keyframes bounce-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ===========================
+   TESTO RECENSIONE ESPANDIBILE
+   =========================== */
+
+.review-text {
+  max-height: 7.5rem; /* circa 150 caratteri */
+  overflow: hidden;
+  transition: max-height 0.35s ease-in-out;
+}
+
+.review-text.expanded {
+  max-height: 20rem;
+}
+
+/* Fade crema in fondo al testo troncato */
+.review-text::after {
+  content: '';
+  display: block;
+  height: 1.5rem;
+  background: linear-gradient(to top, var(--cream-light), transparent);
+}
+
+/* ===========================
+   EFFETTI GENERALI
+   =========================== */
+
+button svg path {
+  stroke-linejoin: round;
+}
+
+button:active svg path {
+  transform: translateY(1px);
+  transition: transform 0.1s ease;
+}
